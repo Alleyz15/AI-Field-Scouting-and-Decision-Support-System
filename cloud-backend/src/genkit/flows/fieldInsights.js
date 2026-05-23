@@ -116,9 +116,9 @@ export const fieldInsightsOrchestratorFlow = ai.defineFlow(
 
     // Step 3: Build knowledge query from recommendations
     const firstCrop = recommendations[0]?.cropName || input.targetCrops[0] || "crop";
-    const moisture = summary.soilMoistureMean;
-    const rainfall = summary.rainfallMm7d;
-    const ndvi = summary.ndviMean;
+    const moisture = Number(summary?.soilMoistureMean ?? 0);
+    const rainfall = Number(summary?.rainfallMm7d ?? 0);
+    const ndvi = Number(summary?.ndviMean ?? 0);
     const kbQuery = `${firstCrop} management NDVI ${ndvi.toFixed(2)} soil moisture ${moisture.toFixed(2)} rainfall ${rainfall.toFixed(1)}mm`;
 
     // Step 4: Query knowledge base

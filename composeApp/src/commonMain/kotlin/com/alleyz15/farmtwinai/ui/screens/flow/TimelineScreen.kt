@@ -576,7 +576,7 @@ fun TimelineScreen(
 
                                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                                     Text(if (recovery?.isUrgent == true) "Urgent action required" else "Suggested action", style = MaterialTheme.typography.labelSmall, color = if (recovery?.isUrgent == true) MaterialTheme.colorScheme.error else Mint200)
-                                    Text(recommendedActionText, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+                                    Text(summarizeRecommendationForFarmer(recommendedActionText), style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
                                     Text("Confirm what you actually did so AI can track recovery accurately.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
                                 }
 

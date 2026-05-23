@@ -941,8 +941,8 @@ app.post("/api/knowledge/query", async (req, res) => {
 app.post("/api/weather-now", async (req, res) => {
   try {
     const location = String(req.body?.location || "").trim();
-    const latitude = Number(req.body?.latitude);
-    const longitude = Number(req.body?.longitude);
+    const latitude = normalizeOptionalCoordinate(req.body?.latitude);
+    const longitude = normalizeOptionalCoordinate(req.body?.longitude);
     const hasCoordinates = Number.isFinite(latitude) && Number.isFinite(longitude);
 
     if (!location && !hasCoordinates) {
@@ -992,8 +992,8 @@ app.post("/api/agents/scouting-loop", async (req, res) => {
       return res.status(400).json({ error: "photoBase64 is required." });
     }
 
-    const latitude = Number(req.body?.latitude);
-    const longitude = Number(req.body?.longitude);
+    const latitude = normalizeOptionalCoordinate(req.body?.latitude);
+    const longitude = normalizeOptionalCoordinate(req.body?.longitude);
     const polygon = normalizePolygon(req.body?.polygon);
 
     const result = await scoutingLoopFlow({
@@ -1083,8 +1083,8 @@ app.post("/api/agents/daily-decision-loop", async (req, res) => {
       return res.status(400).json({ error: "photoBase64 is required." });
     }
 
-    const latitude = Number(req.body?.latitude);
-    const longitude = Number(req.body?.longitude);
+    const latitude = normalizeOptionalCoordinate(req.body?.latitude);
+    const longitude = normalizeOptionalCoordinate(req.body?.longitude);
     const polygon = normalizePolygon(req.body?.polygon);
     const threshold = String(req.body?.autoTrackThreshold || "medium").trim().toLowerCase();
     const autoTrackThreshold = ["low", "medium", "high"].includes(threshold) ? threshold : "medium";
@@ -1149,6 +1149,12 @@ function normalizeTargetCrops(input) {
 function normalizeOptionalNumber(input) {
   const num = Number(input);
   return Number.isFinite(num) && num > 0 ? num : null;
+}
+
+function normalizeOptionalCoordinate(input) {
+  if (input === null || input === undefined || String(input).trim() === "") return undefined;
+  const num = Number(input);
+  return Number.isFinite(num) ? num : undefined;
 }
 
 function resolveFirestoreStatus() {
