@@ -105,7 +105,7 @@ class HttpFarmConfigRepository(
                 }
             })
             put("timelinePhotoCache", buildJsonArray {
-                draft.timelinePhotoCache.forEach { entry ->
+                pruneTimelinePhotoCacheForSync(draft.timelinePhotoCache).forEach { entry ->
                     add(
                         buildJsonObject {
                             put("dayNumber", entry.dayNumber)
@@ -470,6 +470,23 @@ class HttpFarmConfigRepository(
                 FarmPoint(x = x.coerceIn(0f, 1f), y = y.coerceIn(0f, 1f))
             }
         }
+    }
+
+    private fun pruneTimelinePhotoCacheForSync(
+        entries: List<TimelinePhotoCacheEntry>,
+        maxBytes: Int = 700_000,
+    ): List<TimelinePhotoCacheEntry> {
+        var usedBytes = 2
+        val retained = mutableListOf<TimelinePhotoCacheEntry>()
+
+        for (entry in entries.sortedByDescending { it.updatedAtEpochMs }) {
+            val estimatedBytes = entry.photoBase64.length + entry.photoMimeType.length + entry.farmId.length + 80
+            if (usedBytes + estimatedBytes > maxBytes) continue
+            retained += entry
+            usedBytes += estimatedBytes
+        }
+
+        return retained
     }
 
     private suspend fun describeHttpError(

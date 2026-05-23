@@ -1836,7 +1836,7 @@ function compactTimelinePhotoCache(input) {
 
   for (const entry of [...input].sort((a, b) => Number(b?.updatedAtEpochMs || 0) - Number(a?.updatedAtEpochMs || 0))) {
     const estimatedBytes = String(entry?.photoBase64 || "").length + String(entry?.photoMimeType || "").length + String(entry?.farmId || "").length + 80;
-    if (retained.length > 0 && usedBytes + estimatedBytes > maxBytes) continue;
+    if (usedBytes + estimatedBytes > maxBytes) continue;
     retained.push(entry);
     usedBytes += estimatedBytes;
   }

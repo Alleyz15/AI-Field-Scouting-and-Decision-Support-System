@@ -2555,7 +2555,7 @@ class FarmTwinAppState(
 
         for (entry in entries.sortedByDescending { it.updatedAtEpochMs }) {
             val estimatedBytes = entry.photoBase64.length + entry.photoMimeType.length + entry.farmId.length + 80
-            if (retained.isNotEmpty() && usedBytes + estimatedBytes > maxBytes) continue
+            if (usedBytes + estimatedBytes > maxBytes) continue
             retained += entry
             usedBytes += estimatedBytes
         }
